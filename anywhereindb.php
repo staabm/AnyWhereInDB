@@ -584,6 +584,8 @@ table{clear:both; margin-bottom: 20px;}
 			
 		},
 		text_processing = function(text){
+			if (!text) return '';
+			
 			//
 			var search_text_d =new RegExp('('+search_text+')', 'ig');
 			// Remove_tags _! // Highlight the search_text
