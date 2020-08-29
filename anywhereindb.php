@@ -149,9 +149,11 @@ must_login(TRUE);
 //@Functions
 function is_requested($key) {
 // is_set replacement function.. 
-	if(!empty($_REQUEST[$key]) || $_REQUEST[$key] === '0') {
-		return true;
-	}
+	if (array_key_exists($key, $_REQUEST)) {
+        if(!empty($_REQUEST[$key]) || $_REQUEST[$key] === '0') {
+    		return true;
+    	}
+    }
 	return false;
 }
 
@@ -169,7 +171,7 @@ function must_login($first_time = FALSE) {
 		
 	global $conf_data;
 		
-	if ($_SESSION['loggedin'] !== TRUE) {
+	if (array_key_exists('loggedin', $_SESSION) && $_SESSION['loggedin'] !== TRUE) {
 		
 		header('HTTP/1.1 401 Unauthorized');
 		$conf_data['loggedin'] = FALSE;
@@ -355,10 +357,12 @@ function pre($obj, $kill=false){
 
 function db_con_start() {
 	//echo $_SESSION['server'], $_SESSION['dbuser'], $_SESSION['pass'], $_SESSION['dbname'];
-	return db_connect($_SESSION['server'], $_SESSION['dbuser'], $_SESSION['pass'], $_SESSION['dbname']);
+	if (isset($_SESSION['server']) && isset($_SESSION['dbuser']) && isset($_SESSION['pass']) && isset($_SESSION['dbname'])) {
+        return db_connect($_SESSION['server'], $_SESSION['dbuser'], $_SESSION['pass'], $_SESSION['dbname']);
+    }
 }
 // ConnectDB!
-function db_connect ($server, $dbuser, $pass, $dbname) {
+function db_connect($server, $dbuser, $pass, $dbname) {
 	global $conf_data, $link;
 	//echo 'db_connect ', $server, $dbuser, $pass, $dbname, '<br />';
 	$link = @mysql_connect($server, $dbuser, $pass);
